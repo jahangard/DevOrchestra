@@ -1,0 +1,61 @@
+name: Build and test
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-and-package:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: windows
+            arch: amd64
+          - os: ubuntu-latest
+            target: linux
+            arch: amd64
+          - os: macos-latest
+            target: darwin
+            arch: arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+          cache: false
+      - name: Resolve modules
+        run: go mod tidy
+      - name: Verify modules and tests
+        run: go test ./...
+      - name: Compile
+        shell: bash
+        env:
+          GOOS: ${{ matrix.target }}
+          GOARCH: ${{ matrix.arch }}
+          CGO_ENABLED: "0"
+        run: |
+          mkdir -p dist
+          EXE=""
+          if [ "$GOOS" = windows ]; then EXE=".exe"; fi
+          go build -trimpath -o "dist/devorchestra-$GOOS-$GOARCH$EXE" ./cmd/devorchestra
+      - name: Windows installer
+        if: matrix.target == 'windows'
+        shell: pwsh
+        run: |
+          choco install nsis --yes --no-progress
+          & "C:\Program Files (x86)\NSIS\makensis.exe" "/NOCD" "packaging\windows\setup.nsi"
+      - name: Linux deb
+        if: matrix.target == 'linux'
+        run: bash packaging/linux/build-deb.sh dist/devorchestra-linux-amd64
+      - name: macOS pkg
+        if: matrix.target == 'darwin'
+        run: bash packaging/macos/build-pkg.sh dist/devorchestra-darwin-arm64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: devorchestra-${{ matrix.target }}-${{ matrix.arch }}
+          path: dist/*
+          if-no-files-found: error
