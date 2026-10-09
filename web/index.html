@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width,initial-scale=1">
+ <meta name="api-token" content="__TOKEN__">
+ <title>DevOrchestra</title>
+ <link rel="stylesheet" href="/style.css">
+ <script src="/app.js" defer></script>
+</head>
+<body>
+<div class="shell">
+ <aside class="sidebar">
+  <div class="brand"><span class="brand-symbol">◈</span><div><strong>DevOrchestra</strong><small>CODEX WORKSPACE</small></div></div>
+  <nav class="navigation">
+   <button class="nav-item active" data-view="dashboard"><span>◫</span><span data-i18n="dashboard">داشبورد</span></button>
+   <button class="nav-item" data-view="projects"><span>▣</span><span data-i18n="projects">پروژه‌ها</span></button>
+   <button class="nav-item" data-view="templates"><span>◇</span><span data-i18n="templates">کتابخانه پرامپت</span></button>
+   <button class="nav-item" data-view="history"><span>◷</span><span data-i18n="history">تاریخچه اجرا</span></button>
+   <button class="nav-item" data-view="settings"><span>⚙</span><span data-i18n="settings">تنظیمات</span></button>
+  </nav>
+  <div class="sidebar-bottom"><span class="indicator" id="cli-dot"></span><span id="cli-short">Codex CLI</span><small>v0.1.0</small></div>
+ </aside>
+ <main class="main">
+  <header class="topbar">
+   <div><span class="eyebrow" data-i18n="workspace">LOCAL WORKSPACE</span><h1 id="view-title" data-i18n="dashboard">داشبورد</h1></div>
+   <div class="top-actions"><button id="language" class="button secondary">English</button><span class="pill">LOCAL FIRST</span></div>
+  </header>
+  <div id="notice" role="alert" class="notice" hidden></div>
+  <section class="view" id="view-dashboard">
+   <div class="hero"><div><span class="eyebrow">AI CODING COMPANION</span><h2 data-i18n="heroTitle">کدنویسی با Codex، ساده‌تر از همیشه</h2><p data-i18n="heroDesc">پروژه‌ات را انتخاب کن، درخواستت را بنویس و تمام مراحل اجرا را همین‌جا دنبال کن.</p></div><span class="hero-icon">⌘</span></div>
+   <div class="stats"><div class="stat"><span data-i18n="cliStatus">وضعیت Codex</span><strong id="stat-cli">—</strong></div><div class="stat"><span data-i18n="projectCount">پروژه‌ها</span><strong id="stat-projects">0</strong></div><div class="stat"><span data-i18n="runCount">تعداد اجراها</span><strong id="stat-runs">0</strong></div></div>
+   <div class="panel">
+    <div class="panel-head"><div><h3 data-i18n="newRequest">درخواست جدید</h3><p data-i18n="newRequestSub">درخواست مستقیماً برای Codex CLI ارسال می‌شود.</p></div><span class="tag" data-i18n="localRun">اجرای محلی</span></div>
+    <form id="run-form">
+     <div class="form-grid"><label><span data-i18n="targetProject">پروژه مقصد</span><select id="project-select" required></select></label><label><span data-i18n="permissions">سطح دسترسی</span><select id="sandbox-select"><option value="read-only" data-i18n="readOnly">فقط خواندنی (امن‌تر)</option><option value="workspace-write" data-i18n="workspaceWrite">اجازه ویرایش پروژه</option></select></label></div>
+     <label class="field"><span data-i18n="prompt">پرامپت</span><textarea id="prompt-text" rows="7" required data-i18n-placeholder="promptPlaceholder" placeholder="دقیقاً بگو چه چیزی را در پروژه تغییر دهیم..."></textarea></label>
+     <div class="toolbar"><button type="button" id="enhance" class="button secondary" data-i18n="enhance">تکمیل ساختاریافته</button><button type="button" id="save-template" class="button secondary" data-i18n="saveTemplate">ذخیره پرامپت</button><span class="grow"></span><button class="button primary" id="run-button" type="submit" data-i18n="execute">اجرای Codex ←</button></div>
+    </form>
+   </div>
+   <div class="panel console-panel"><div class="panel-head"><div><h3 data-i18n="liveOutput">خروجی و رویدادهای اجرا</h3><p id="run-caption" data-i18n="noRun">هنوز اجرایی انتخاب نشده است.</p></div><button id="cancel-run" class="button danger" type="button" hidden data-i18n="cancel">توقف اجرا</button></div><pre id="event-stream" dir="auto"></pre></div>
+  </section>
+  <section class="view" id="view-projects" hidden>
+   <div class="panel"><div class="panel-head"><div><h3 data-i18n="addProject">افزودن پروژه</h3><p data-i18n="projectNote">مسیر پوشه باید روی همین کامپیوتر وجود داشته باشد.</p></div></div>
+    <form id="project-form" class="form-grid"><label><span data-i18n="name">نام پروژه</span><input name="name" maxlength="100" required placeholder="My Project"></label><label><span data-i18n="folderPath">مسیر پوشه</span><input name="path" required placeholder="D:\dev\MyProject / /home/user/project" dir="ltr"></label><button class="button primary" type="submit" data-i18n="add">افزودن</button></form>
+   </div>
+   <div class="panel"><h3 data-i18n="myProjects">پروژه‌های من</h3><div id="project-list" class="collection"></div></div>
+  </section>
+  <section class="view" id="view-templates" hidden>
+   <div class="panel"><div class="panel-head"><div><h3 data-i18n="promptLibrary">کتابخانه پرامپت</h3><p data-i18n="templateNote">الگوهای آماده، ذخیره‌شده و واردشده از منابع مرجع.</p></div></div><div id="template-list" class="collection"></div></div>
+   <div class="panel"><h3 data-i18n="importTitle">واردکردن از منبع مرجع</h3><p data-i18n="importHint">فقط فایل‌های Markdown یا Text از raw.githubusercontent.com. محتوای واردشده قبل از استفاده باید بازبینی شود.</p><form id="import-form" class="inline-form"><input name="url" type="url" required placeholder="https://raw.githubusercontent.com/.../prompt.md" dir="ltr"><button class="button secondary" type="submit" data-i18n="import">دریافت</button></form></div>
+  </section>
+  <section class="view" id="view-history" hidden><div class="panel"><div class="panel-head"><h3 data-i18n="recentRuns">آخرین اجراها</h3><button id="refresh-history" class="button secondary" data-i18n="refresh">بازخوانی</button></div><div id="history-list" class="collection"></div></div></section>
+  <section class="view" id="view-settings" hidden>
+   <div class="panel"><h3 data-i18n="tools">وضعیت ابزارها</h3><div class="info-grid"><span>Codex CLI</span><strong id="version-codex">—</strong><span>Node.js</span><strong id="version-node">—</strong><span>npm</span><strong id="version-npm">—</strong><span data-i18n="authentication">احراز هویت</span><strong id="version-auth">—</strong><span>SQLite</span><code id="database-path" dir="ltr">—</code></div><div class="toolbar"><button id="install-codex" class="button primary" data-i18n="installCodex">نصب Codex CLI با npm</button><button id="refresh-status" class="button secondary" data-i18n="refresh">بازخوانی</button></div></div>
+   <div class="panel"><h3 data-i18n="loginTitle">ورود به Codex</h3><p data-i18n="loginHelp">پس از نصب، دستور زیر را در ترمینال اجرا کن و مراحل ورود را تکمیل کن. DevOrchestra رمز یا توکن حساب را ذخیره نمی‌کند.</p><div class="copyline"><code dir="ltr">codex login</code><button id="copy-login" class="button secondary" data-i18n="copy">کپی</button></div></div>
+  </section>
+  <footer>DevOrchestra · Local-first · Go + SQLite + Codex CLI</footer>
+ </main>
+</div>
+</body>
+</html>
