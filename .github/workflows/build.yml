@@ -47,7 +47,7 @@ jobs:
         shell: pwsh
         run: |
           choco install nsis --yes --no-progress
-          & "C:\Program Files (x86)\NSIS\makensis.exe" "packaging\windows\setup.nsi"
+          & "C:\Program Files (x86)\NSIS\makensis.exe" "/NOCD" "packaging\windows\setup.nsi"
       - name: Linux deb
         if: matrix.target == 'linux'
         run: bash packaging/linux/build-deb.sh dist/devorchestra-linux-amd64
