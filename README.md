@@ -6,6 +6,13 @@ A lightweight Go web application that runs locally on Windows, macOS and Linux. 
 
 > **Status:** early MVP on the `feat/codex-desktop-mvp` branch. Cross-platform builds and installers must be tested before a stable release. This is not yet a multi-agent orchestrator.
 
+## User guides / راهنمای استفاده
+
+- **فارسی:** [راهنمای کامل نصب و استفاده](docs/USER_GUIDE.fa.md)
+- **English:** [Complete installation and usage guide](docs/USER_GUIDE.en.md)
+
+Inside the application, open **Help / راهنمای استفاده** from the sidebar. Both the UI and embedded guide switch between Persian (RTL) and English (LTR) using the language button. Developer contact details are available under **About / درباره برنامه**.
+
 ## Current features
 
 - Persian (RTL) and English (LTR) interface, with no frontend build dependencies.
@@ -68,6 +75,13 @@ Imported prompts are untrusted documents; they are never executed automatically.
 
 - [Architecture & threat model](docs/ARCHITECTURE.md)
 - [Roadmap](docs/ROADMAP.md)
+
+## Developer / برنامه‌نویس
+
+**برنامه نویسی : مهدی جهانگرد mehdi jahangard**
+
+- Email: [mehdi.jahangard@gmail.com](mailto:mehdi.jahangard@gmail.com)
+- Mobile: [+98 912 724 6727](tel:+989127246727)
 
 ## License
 
